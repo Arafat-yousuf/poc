@@ -40,4 +40,26 @@ export class GoogleDriveService {
       throw new Error(`Unable to list files: ${error.message}`);
     }
   }
+
+  async getStartPageToken(): Promise<any> {
+    try {
+      const response = await this.drive.changes.getStartPageToken({});
+
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw new Error(`Unable to list files: ${error.message}`);
+    }
+  }
+
+  async syncChanges(): Promise<any> {
+    try {
+      const response = await this.drive.changes.list({ pageToken: '1', fields: '*' });
+
+      console.log(JSON.stringify(response, null, 1));
+      return response;
+    } catch (error) {
+      throw new Error(`Unable to list files: ${error.message}`);
+    }
+  }
 }
