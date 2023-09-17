@@ -1,11 +1,11 @@
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, ButtonGroup, Grid } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import exifr from 'exifr';
 import { useState } from 'react';
-import { getFilesHandler } from '../../api/handlers/user.api.handler';
+import { getFilesHandler, getStartPageTokenHandler, syncChangesHandler } from '../../api/handlers/storage.api.handler';
 import { GDriveResponse } from '../../models/gdrive.response';
 
 export default function Test() {
@@ -18,20 +18,37 @@ export default function Test() {
     }
   };
 
-  const handleClick = async () => {
+  const handleClickList = async () => {
     const files = await getFilesHandler();
     console.log(files.data);
     setImageFiles(files.data);
   };
+
+  const handleClickgetToken = async () => {
+    const response = await getStartPageTokenHandler();
+    console.log(response);
+  };
+
+  const handleSyncChanges = async () => {
+    const response = await syncChangesHandler();
+    console.log(response);
+  };
   return (
     <Box>
-      <Button variant='contained' component='label'>
+      <Button sx={{ mx: 2 }} variant='contained' component='label'>
         Upload
         <input hidden type='file' onChange={handleFileInputChange} accept='image/*' />
       </Button>
-      <Button onClick={handleClick} variant='contained' component='label'>
+      <Button sx={{ mx: 2 }} onClick={handleClickList} variant='contained' component='label'>
         List
       </Button>
+      <Button sx={{ mx: 2 }} onClick={handleClickgetToken} variant='contained' component='label'>
+        GetToken
+      </Button>
+      <Button sx={{ mx: 2 }} onClick={handleSyncChanges} variant='contained' component='label'>
+        Sync
+      </Button>
+
       <Grid container>
         {imageFiles.length > 0 &&
           imageFiles.map((imageFile, index) => (
