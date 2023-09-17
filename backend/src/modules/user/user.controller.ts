@@ -1,4 +1,4 @@
-import { Controller, Get, Logger, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { GetUser } from 'src/config/user.decorator';
 import { AuthGuard } from 'src/guards/http/auth.guard';
@@ -29,11 +29,5 @@ export class UserController {
   @ApiOkResponse({ type: UserResponseDto })
   async findCurrentUser(@GetUser() id: string): Promise<UserResponse> {
     return await this.userService.getUserById(id);
-  }
-
-  @Get('/getFiles')
-  @UseGuards(AuthGuard)
-  async getFiles(@GetUser() id: string) {
-    return await this.userService.getFiles(id);
   }
 }

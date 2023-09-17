@@ -6,7 +6,6 @@ import { Model } from 'mongoose';
 import { appConfig } from 'src/configuration';
 import { OAuthMapEntity, OAuthMapEntityDocument } from 'src/entities/oauth.map.entity';
 import { UserEntity, UserEntityDocument } from 'src/entities/user.entity';
-import { GoogleDriveService } from 'src/helpers/gdrive.helper';
 import { RegisterUserInput } from 'src/models/user/register.user.input';
 import { UserResponse } from 'src/models/user/user.response';
 
@@ -71,13 +70,11 @@ export class UserService {
     return UserEntity.toUserDto(user);
   }
 
-  async getFiles(userId: string) {
+  async getUserRefreshToken(userId: string): Promise<string> {
     const user = await this.userRepository.findOne({ _id: userId }).exec();
-    if (!user) {
-      return null;
+    if (!user || !user.refreshToken) {
+      throw new NotFoundException('user or refresh token not found');
     }
-    const gDriveHelper = new GoogleDriveService(this.config, user.refreshToken);
-    const files = await gDriveHelper.listFiles();
-    return files;
+    return user.refreshToken;
   }
 }
